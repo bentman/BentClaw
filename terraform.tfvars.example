@@ -1,0 +1,23 @@
+/*
+#################### VALUES ####################
+########## SECRET VALUES ##########
+#####  Declare confidential variables here
+#####  Store secret values in *.tfvars file
+#####  Check .gitignore in repo for details
+########## SECRET VALUES ##########
+arm_tenant_id          = "YourTenantId"               // azure tenant id
+arm_subscription_id    = "YourSubscriptionId"         // azure subscription id
+arm_client_id          = "YourServicePrincipalId"     // azure service principal id
+arm_client_secret      = "YourServicePrincipalSecret" // azure service principal secret
+vm_localadmin_user     = "YourAdminUsername"          // vm local admin username 'localadmin'
+vm_localadmin_pswd     = "YourAdminPassword"          // vm local admin password 'P@ssw0rd!234'
+
+# copy to terraform.tfvars and fill in
+# subscription_id = "00000000-0000-0000-0000-000000000000"
+
+project_name         = "azureclaw"
+location             = "eastus2"
+vm_size              = "Standard_B2s"
+vm_disk_size_gb      = 64
+allow_gateway_public = false
+*/

@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "microsoft-foundry-mcp-server": {
+      "type": "http",
+      "url": "https://mcp.ai.azure.com/",
+      "headers": {
+        "Authorization": "Bearer ${input:foundry-token}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "foundry-token",
+      "description": "Azure Foundry MCP access token",
+      "password": true
+    }
+  ]
+}

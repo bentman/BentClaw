@@ -1,0 +1,103 @@
+#cloud-config
+# Bootstrap OpenClaw on first boot (official installer script)
+package_update: true
+packages:
+  - curl
+  - git
+  - openvpn
+  - openssl
+  - ffmpeg
+
+users:
+  - default
+
+write_files:
+  # OpenVPN bootstrap script (values rendered in by Terraform)
+  - path: /opt/openvpn-setup.sh
+    permissions: '0700'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      cd /etc/openvpn/server
+
+      # skip if already provisioned
+      if [ -f azureclaw.ovpn.done ]; then exit 0; fi
+
+      # server identity
+      openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 \
+        -keyout server.key -out server.crt -nodes -sha256 -days 3650 \
+        -subj '/CN=${vm_common_name}'
+      chmod 600 server.key
+
+      # client identity
+      openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 \
+        -keyout client.key -out client.crt -nodes -sha256 -days 3650 \
+        -subj '/CN=${vm_common_name}-client'
+
+      fp() { openssl x509 -fingerprint -sha256 -noout -in "$1" | cut -d= -f2; }
+
+      # server config
+      cat > server.conf <<EOF
+      port ${openvpn_port}
+      proto udp
+      dev tun
+      cert /etc/openvpn/server/server.crt
+      key /etc/openvpn/server/server.key
+      dh none
+      server 10.8.0.0 255.255.255.0
+      push "route ${vm_private_ip} 255.255.255.255"
+      tun-mtu 1400
+      <peer-fingerprint>
+      $(fp client.crt)
+      </peer-fingerprint>
+      explicit-exit-notify 1
+      keepalive 60 300
+      persist-key
+      persist-tun
+      user nobody
+      group nogroup
+      verb 3
+      EOF
+
+      # client profile
+      cat > /home/${admin_username}/azureclaw.ovpn <<EOF
+      # OpenVPN client profile for ${vm_common_name}
+      client
+      remote ${openvpn_public_ip} ${openvpn_port}
+      proto udp
+      dev tun
+      nobind
+      persist-key
+      persist-tun
+      tun-mtu 1400
+      verb 3
+      <key>
+      $(cat client.key)
+      </key>
+      <cert>
+      $(cat client.crt)
+      </cert>
+      peer-fingerprint $(fp server.crt)
+      EOF
+      chown ${admin_username} /home/${admin_username}/azureclaw.ovpn
+      chmod 600 /home/${admin_username}/azureclaw.ovpn
+
+      touch azureclaw.ovpn.done
+      systemctl enable --now openvpn-server@server
+
+runcmd:
+  # full system update/upgrade before provisioning
+  - sudo apt update && sudo apt upgrade -y
+  # azure-cli is not in the Ubuntu 24.04 archive; install from packages.microsoft.com
+  - sudo install -d -m 0755 /etc/apt/keyrings
+  - curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+  - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ noble main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+  - sudo apt update && sudo apt install -y azure-cli
+  # install as the admin user (openclaw installs to the invoking user's home);
+  # --no-prompt --no-onboard = non-interactive install, no onboarding, no gateway start
+  # (openclaw installs the latest version via global npm; installer provisions Node 24 LTS if missing)
+  - sudo -u ${admin_username} -p ${admin_password} bash -c 'curl -fsSL --proto "=https" --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
+  # update global npm packages as the admin user (PATH set by installer if prefix moved)
+  - sudo -u ${admin_username} -p ${admin_password} bash -lc 'export PATH="$HOME/.npm-global/bin:$PATH"; npm update -g'
+  # bootstrap OpenVPN (generates certs, azureclaw.ovpn, starts the server)
+  - bash /opt/openvpn-setup.sh
