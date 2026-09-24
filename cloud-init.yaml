@@ -2,11 +2,22 @@
 # Bootstrap OpenClaw on first boot (official installer script)
 package_update: true
 packages:
+  - apt-transport-https
+  - ca-certificates
   - curl
+  - build-essential
+  - cmake
+  - g++
+  - gh
   - git
+  - gnupg
+  - make
   - openvpn
   - openssl
   - ffmpeg
+  - python3
+  - python3-openai
+  - python3-pip
 
 users:
   - default
