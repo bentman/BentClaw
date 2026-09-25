@@ -1,5 +1,4 @@
-#cloud-config
-# Bootstrap OpenClaw on first boot
+# cloud-init.yaml (userdata)
 package_update: true
 
 packages:
@@ -100,18 +99,13 @@ write_files:
 runcmd:
   # full system update/upgrade before provisioning
   - apt update && apt upgrade -y
-
   # Claude Code
-  - sudo -u ${admin_username} -H bash -lc 'curl -fsSL https://claude.ai/install.sh | bash -s stable'
-
+  - runuser -l ${admin_username} -c 'curl -fsSL https://claude.ai/install.sh | bash -s stable'
   # Codex
-  - sudo -u ${admin_username} -H bash -lc 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
-
+  - runuser -l ${admin_username} -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
   # OpenClaw
-  - - sudo -u ${admin_username} -H bash -lc `curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard`
-
+  - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
   # ensure user-local CLI path
-  - sudo -u ${admin_username} -H bash -lc 'grep -qxF '\''export PATH="$HOME/.local/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$PATH"'\'' >> ~/.bashrc'
-  
+  - runuser -l ${admin_username} -c 'grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc'
   # OpenVPN
   - bash /opt/openvpn-setup.sh
