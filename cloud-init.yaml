@@ -1,4 +1,4 @@
-# cloud-init.yaml (userdata)
+#cloud-config
 package_update: true
 
 packages:
@@ -25,7 +25,7 @@ users:
 write_files:
   # OpenVPN bootstrap script (values rendered in by Terraform)
   - path: /opt/openvpn-setup.sh
-    permissions: '0700'
+    permissions: "0700"
     content: |
       #!/usr/bin/env bash
       set -euo pipefail
