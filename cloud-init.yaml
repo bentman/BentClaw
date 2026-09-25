@@ -104,6 +104,10 @@ runcmd:
   - curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
   - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ noble main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
   - sudo apt update && sudo apt install -y azure-cli
+  # install Claude Code CLI
+  - curl -fsSL https://claude.ai/install.sh | bash -s stable
+  # install Codex CLI
+  - curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh 
   # install as the admin user (openclaw installs to the invoking user's home);
   # --no-prompt --no-onboard = non-interactive install, no onboarding, no gateway start
   # (openclaw installs the latest version via global npm; installer provisions Node 24 LTS if missing)
