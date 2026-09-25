@@ -95,24 +95,67 @@ write_files:
 
       touch azureclaw.ovpn.done
       systemctl enable --now openvpn-server@server
+  - path: /opt/install-user-ai-tools.sh
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      ADMIN_USER="${admin_username}"
+      ADMIN_HOME="/home/${admin_username}"
+
+      run_as_admin() {
+        sudo -Hiu "$ADMIN_USER" bash -lc "$1"
+      }
+
+      echo "== installing Claude Code for $ADMIN_USER =="
+      run_as_admin '
+        set -e
+        export PATH="$HOME/.local/bin:$PATH"
+        curl -fsSL https://claude.ai/install.sh \
+          | bash -s stable >/tmp/claude-code-install.log 2>&1
+        command -v claude
+        claude --version
+      '
+
+      echo "== installing Codex for $ADMIN_USER =="
+      run_as_admin '
+        set -e
+        export PATH="$HOME/.local/bin:$PATH"
+        curl -fsSL https://chatgpt.com/codex/install.sh \
+          | CODEX_NON_INTERACTIVE=1 sh >/tmp/codex-install.log 2>&1
+        command -v codex
+        codex --version
+      '
+
+      echo "== installing OpenClaw for $ADMIN_USER =="
+      run_as_admin '
+        set -e
+        export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"
+        curl -fsSL --proto "=https" --tlsv1.2 https://openclaw.ai/install.sh \
+          | bash -s -- --no-prompt --no-onboard >/tmp/openclaw-install.log 2>&1
+        command -v openclaw
+        openclaw --version
+      '
+
+      echo "== ensuring PATH in bashrc =="
+      run_as_admin '
+        grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc \
+          || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc
+      '
 
 runcmd:
   # full system update/upgrade before provisioning
-  - sudo apt update && sudo apt upgrade -y
+  - apt update && apt upgrade -y
+
   # azure-cli is not in the Ubuntu 24.04 archive; install from packages.microsoft.com
-  - sudo install -d -m 0755 /etc/apt/keyrings
-  - curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
-  - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ noble main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-  - sudo apt update && sudo apt install -y azure-cli
-  # install Claude Code CLI
-  - curl -fsSL https://claude.ai/install.sh | bash -s stable
-  # install Codex CLI
-  - curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh 
-  # install as the admin user (openclaw installs to the invoking user's home);
-  # --no-prompt --no-onboard = non-interactive install, no onboarding, no gateway start
-  # (openclaw installs the latest version via global npm; installer provisions Node 24 LTS if missing)
-  - sudo -u ${admin_username} -p ${admin_password} bash -c 'curl -fsSL --proto "=https" --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
-  # update global npm packages as the admin user (PATH set by installer if prefix moved)
-  - sudo -u ${admin_username} -p ${admin_password} bash -lc 'export PATH="$HOME/.npm-global/bin:$PATH"; npm update -g'
-  # bootstrap OpenVPN (generates certs, azureclaw.ovpn, starts the server)
+  - install -d -m 0755 /etc/apt/keyrings
+  - curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+  - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ noble main" | tee /etc/apt/sources.list.d/azure-cli.list
+  - apt update && apt install -y azure-cli
+
+  # install user-scoped Claude Code, Codex, and OpenClaw
+  - bash /opt/install-user-ai-tools.sh
+
+  # bootstrap OpenVPN
   - bash /opt/openvpn-setup.sh
