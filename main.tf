@@ -55,6 +55,9 @@ resource "azurerm_linux_virtual_machine" "openclaw" {
   admin_password        = var.vm_localadmin_pswd
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
 
+  secure_boot_enabled = true
+  vtpm_enabled        = true
+
   admin_ssh_key {
     username   = var.vm_localadmin_user
     public_key = tls_private_key.openclaw_ssh.public_key_openssh

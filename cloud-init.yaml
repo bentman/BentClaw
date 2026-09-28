@@ -4,16 +4,17 @@ package_update: true
 packages:
   - apt-transport-https
   - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
   - openvpn
   - openssl
-  - curl
   - build-essential
   - make
   - cmake
   - git
   - g++
   - gh
-  - gnupg
   - ffmpeg
   - python3
   - python3-openai
@@ -99,12 +100,22 @@ write_files:
 runcmd:
   # full system update/upgrade before provisioning
   - apt update && apt upgrade -y
+  # Azure-CLI (az)
+  - sudo mkdir -p /etc/apt/keyrings
+  - curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+  - AZ_DIST=$(lsb_release -cs)
+  - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" | tee /etc/apt/sources.list.d/azure-cli.list
+  - apt update && apt install -y azure-cli
   # Claude Code
   - runuser -l ${admin_username} -c 'curl -fsSL https://claude.ai/install.sh | bash -s stable'
   # Codex
   - runuser -l ${admin_username} -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
+  # Antigravity
+  - runuser -l ${admin_username} -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash'
   # OpenClaw
   - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
+  # Hermes
+  # - runuser -l ${admin_username} -c `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive`
   # ensure user-local CLI path
   - runuser -l ${admin_username} -c 'grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc'
   # OpenVPN
