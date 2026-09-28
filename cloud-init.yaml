@@ -112,6 +112,8 @@ runcmd:
   - runuser -l ${admin_username} -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
   # Antigravity
   - runuser -l ${admin_username} -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash'
+  # Github Copilot
+  - runuser -l ${admin_username} -c 'curl -fsSL https://gh.io/copilot-install | bash`
   # OpenClaw
   - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
   # Hermes
