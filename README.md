@@ -112,5 +112,5 @@ terraform destroy
 - Heavier use (multiple channels, big automations): 
   - bump to `Standard_D2s_v5` (2 vCPU / 8 GB, ~$55/mo) — the size used in the official docs.
 - cloud-init runs `apt update && apt upgrade -y`, installs packages, then installs OpenClaw (npm global) and `npm update -g`; first boot takes ~10 minutes before everything is up.
-- OPTIONAL: Uncomment `# Hermes` install in `cloud-init.yaml` to aslo install [Hermes-Agent](https://hermes-agent.nousresearch.com/)
+- OPTIONAL: Uncomment `# Hermes` install in `cloud-init.yaml` to also install [Hermes-Agent](https://hermes-agent.nousresearch.com/)
   - `- runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive'`
