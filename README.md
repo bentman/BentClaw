@@ -1,4 +1,4 @@
-# 🦀 BentClaw — OpenClaw Dev-Lab on Azure (from Terraform)
+# 🦀 BentClaw — OpenClaw Dev-Lab on Azure (Terraform)
 
 Deploys [OpenClaw](https://openclaw.ai) on a single Azure Linux VM.  
 > No Bastion, no Key Vault — just a locked-down VM with a public IP and NSG-restricted SSH.
