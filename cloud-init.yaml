@@ -117,7 +117,7 @@ runcmd:
   # OpenClaw
   - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
   # Hermes
-  # - runuser -l ${admin_username} -c `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive`
+  # - runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive'
   # ensure user-local CLI path
   - runuser -l ${admin_username} -c 'grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc'
   # OpenVPN

@@ -1,8 +1,9 @@
-# AzureClaw — OpenClaw on Azure (Terraform)
+# 🦀 BentClaw — OpenClaw Dev-Lab on Azure (from Terraform)
 
-Deploys [OpenClaw](https://openclaw.ai) on a single Azure Linux VM. No Bastion, no Key Vault — just a locked-down VM with a public IP and NSG-restricted SSH.
+Deploys [OpenClaw](https://openclaw.ai) on a single Azure Linux VM.  
+> No Bastion, no Key Vault — just a locked-down VM with a public IP and NSG-restricted SSH.
 
-## What you get
+## 🧬 What you get
 
 | Resource | Details |
 |---|---|
@@ -19,7 +20,7 @@ OpenClaw is installed on first boot via cloud-init running the official installe
 
 **Estimated cost: ~$35/month** (VM ~$30, disk/IP minor). `terraform destroy` or deallocate the VM to stop compute billing.
 
-## Prerequisites
+## 🛠️ Prerequisites
 
 - Terraform >= 1.6.0
 - Azure CLI authenticated (`az login`)
@@ -29,7 +30,7 @@ OpenClaw is installed on first boot via cloud-init running the official installe
   az provider register --namespace Microsoft.Network
   ```
 
-## Deploy
+## 🏗️ Deploy
 
 ```bash
 cp terraform.tfvars.example terraform.tfvars   # fill in the ARM/sp values
@@ -37,7 +38,7 @@ terraform init
 terraform apply
 ```
 
-## Connect
+## 🛜 Connect
 
 ```bash
 terraform output -raw ssh_private_key > ~/.ssh/openclaw_key.pem
@@ -46,7 +47,7 @@ ssh -i ~/.ssh/openclaw_key.pem <vm_localadmin_user>@$(terraform output -raw vm_p
 
 `~/.ssh/openclaw_key.pem` works in both bash and PowerShell and inherits ACLs on Windows. If you save the key somewhere else on Windows, restrict its ACL (`icacls <file> /inheritance:r /grant:r "<DOMAIN>\<user>:R"`) or OpenSSH will refuse it ("UNPROTECTED PRIVATE KEY FILE").
 
-## Verify
+## ✅ Verify
 
 Wait ~10 minutes for cloud-init (apt upgrade + OpenClaw install), then in the VM:
 
@@ -62,7 +63,7 @@ When ready, finish setup interactively:
 openclaw onboard --install-daemon
 ```
 
-## Access the gateway
+## 🗝️ Access the gateway
 
 The VM runs an OpenVPN server (peer-fingerprint mode, generated on the VM with openssl at first boot) on UDP 1194, open to any public IP. Fetch the profile after cloud-init finishes:
 
@@ -84,13 +85,13 @@ Only the VM is reachable over the tunnel — not the whole subnet. Note: the Ope
 
 Or set `allow_gateway_public = true` in `terraform.tfvars` to allow the gateway port from your IP directly (re-apply required).
 
-## Cleanup
+## 🧹 Cleanup
 
 ```bash
 terraform destroy
 ```
 
-## Outputs
+## 📤 Outputs
 
 | Output | Description |
 |---|---|
@@ -105,9 +106,11 @@ terraform destroy
 | `openvpn_config_file` | scp command to fetch `azureclaw.ovpn` (sensitive) |
 | `next_steps` | Post-deploy checklist (sensitive) |
 
-## Sizing notes
+## 📊 Sizing notes
 
-- `Standard_B2s` is the sweet spot for a single-user, bursty OpenClaw workload (~$30/mo).
+- `Standard_B2s` is the sweet spot for a single-user dev-lab, bursty OpenClaw workload (~$30/mo).
 - Heavier use (multiple channels, big automations): 
-  - bump to `Standard_B2as_v2` (2 vCPU / 8 GB, ~$55/mo) — the size used in the official docs.
+  - bump to `Standard_D2s_v5` (2 vCPU / 8 GB, ~$55/mo) — the size used in the official docs.
 - cloud-init runs `apt update && apt upgrade -y`, installs packages, then installs OpenClaw (npm global) and `npm update -g`; first boot takes ~10 minutes before everything is up.
+- OPTIONAL: Uncomment `# Hermes` install in `cloud-init.yaml` to aslo install [Hermes-Agent](https://hermes-agent.nousresearch.com/)
+  - `- runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive'`
