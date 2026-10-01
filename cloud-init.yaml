@@ -33,7 +33,7 @@ write_files:
       cd /etc/openvpn/server
 
       # skip if already provisioned
-      if [ -f azureclaw.ovpn.done ]; then exit 0; fi
+      if [ -f ${project_name}.ovpn.done ]; then exit 0; fi
 
       # server identity
       openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 \
@@ -72,7 +72,7 @@ write_files:
       EOF
 
       # client profile
-      cat > /home/${admin_username}/azureclaw.ovpn <<EOF
+      cat > /home/${admin_username}/${project_name}.ovpn <<EOF
       # OpenVPN client profile for ${vm_common_name}
       client
       remote ${openvpn_public_ip} ${openvpn_port}
@@ -91,10 +91,10 @@ write_files:
       </cert>
       peer-fingerprint $(fp server.crt)
       EOF
-      chown ${admin_username} /home/${admin_username}/azureclaw.ovpn
-      chmod 600 /home/${admin_username}/azureclaw.ovpn
+      chown ${admin_username} /home/${admin_username}/${project_name}.ovpn
+      chmod 600 /home/${admin_username}/${project_name}.ovpn
 
-      touch azureclaw.ovpn.done
+      touch ${project_name}.ovpn.done
       systemctl enable --now openvpn-server@server
 
 runcmd:
@@ -120,5 +120,7 @@ runcmd:
   # - runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive'
   # ensure user-local CLI path
   - runuser -l ${admin_username} -c 'grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc'
-  # OpenVPN
+  # git clone repo local
+  - runuser -l ${admin_username} -c 'mkdir -p ~/WORK/CODE/REPO && pushd ~/WORK/CODE/REPO && git clone https://github.com/bentman/BentClaw.git && popd'
+  # run OpenVPN setup script
   - bash /opt/openvpn-setup.sh

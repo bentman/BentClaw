@@ -13,9 +13,9 @@ vm_localadmin_user     = "YourAdminUsername"          // vm local admin username
 vm_localadmin_pswd     = "YourAdminPassword"          // vm local admin password 'P@ssw0rd!234'
 
 ########## PROJECT VALUES ##########
-project_name         = "azureclaw"
-location             = "eastus2"
-vm_size              = "Standard_B2s"
-vm_disk_size_gb      = 64
-allow_gateway_public = false
+project_name         = "azureclaw"    // unique name for project/rg/vm
+location             = "eastus2"      // azure region to deploy
+vm_size              = "Standard_B2s" // 2 cpu 4 ram
+vm_disk_size_gb      = 64             // 64 GB os-disk
+allow_gateway_public = false          // openclaw gateway on public ip
 */
