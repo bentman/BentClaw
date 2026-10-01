@@ -99,11 +99,12 @@ write_files:
 
 runcmd:
   # apt update
-  - apt update && apt upgrade -y
+  - apt update
   # Node.js 26 - OpenClaw recommended runtime
   - curl -fsSL https://deb.nodesource.com/setup_26.x | bash -
   - apt install -y nodejs
-  - node --version  # Azure-CLI (az)
+  - node --version  
+  # Azure-CLI (az)
   - sudo mkdir -p /etc/apt/keyrings
   - curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
   - AZ_DIST=$(lsb_release -cs)
@@ -129,3 +130,4 @@ runcmd:
   - runuser -l ${admin_username} -c 'mkdir -p ~/WORK/CODE/REPO && pushd ~/WORK/CODE/REPO && git clone https://github.com/bentman/BentClaw.git && popd'
   # run OpenVPN setup script
   - bash /opt/openvpn-setup.sh
+  # runuser -l ${admin_username} -c `echo cloud-init finished provisioning at $(date) >> ~/cloud-init.log`
