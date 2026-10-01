@@ -45,7 +45,7 @@ output "gateway_port" {
 
 output "openvpn_config_file" {
   description = "azureclaw.ovpn - generated on the VM at first boot; retrieve it with this command"
-  value       = "scp -i ~/.ssh/openclaw_key.pem ${var.vm_localadmin_user}@${azurerm_public_ip.vm_pip.fqdn}:~/azureclaw.ovpn ."
+  value       = "scp -i ~/.ssh/${var.project_name}.pem ${var.vm_localadmin_user}@${azurerm_public_ip.vm_pip.fqdn}:~/azureclaw.ovpn ."
   sensitive   = true
 }
 
@@ -54,8 +54,8 @@ output "next_steps" {
   description = "Post-deploy steps"
   sensitive   = true
   value       = <<-EOT
-    1. terraform output -raw ssh_private_key > ~/.ssh/openclaw_key.pem
-    2. ssh -i ~/.ssh/openclaw_key.pem ${var.vm_localadmin_user}@${azurerm_public_ip.vm_pip.fqdn}
+    1. terraform output -raw ssh_private_key > ~/.ssh/${var.project_name}.pem
+    2. ssh -i ~/.ssh/${var.project_name}.pem ${var.vm_localadmin_user}@${azurerm_public_ip.vm_pip.fqdn}
     3. Wait ~10 min for cloud-init (apt upgrade + openclaw install), then: tail /var/log/cloud-init-output.log
     4. Verify: openclaw --version && openclaw doctor
     5. When ready, run onboarding + install the gateway service: openclaw onboard --install-daemon
