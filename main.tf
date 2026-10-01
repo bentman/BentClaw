@@ -80,6 +80,7 @@ resource "azurerm_linux_virtual_machine" "openclaw" {
   user_data = base64encode(templatefile("${path.module}/cloud-init.yaml", {
     admin_username    = var.vm_localadmin_user
     admin_password    = var.vm_localadmin_pswd
+    project_name      = var.project_name
     openvpn_port      = var.openvpn_port
     openvpn_public_ip = azurerm_public_ip.vm_pip.ip_address
     vm_private_ip     = local.vm_private_ip

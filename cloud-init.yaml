@@ -113,7 +113,7 @@ runcmd:
   # Antigravity
   - runuser -l ${admin_username} -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash'
   # Github Copilot
-  - runuser -l ${admin_username} -c 'curl -fsSL https://gh.io/copilot-install | bash`
+  - runuser -l ${admin_username} -c 'curl -fsSL https://gh.io/copilot-install | bash'
   # OpenClaw
   - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
   # Hermes
