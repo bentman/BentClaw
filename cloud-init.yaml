@@ -98,14 +98,19 @@ write_files:
       systemctl enable --now openvpn-server@server
 
 runcmd:
-  # full system update/upgrade before provisioning
+  # apt update
   - apt update && apt upgrade -y
-  # Azure-CLI (az)
+  # Node.js 26 - OpenClaw recommended runtime
+  - curl -fsSL https://deb.nodesource.com/setup_26.x | bash -
+  - apt install -y nodejs
+  - node --version  # Azure-CLI (az)
   - sudo mkdir -p /etc/apt/keyrings
   - curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
   - AZ_DIST=$(lsb_release -cs)
   - echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" | tee /etc/apt/sources.list.d/azure-cli.list
   - apt update && apt install -y azure-cli
+  # full system update/upgrade before provisioning
+  - apt update && apt upgrade -y
   # Claude Code
   - runuser -l ${admin_username} -c 'curl -fsSL https://claude.ai/install.sh | bash -s stable'
   # Codex

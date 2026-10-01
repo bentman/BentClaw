@@ -72,7 +72,7 @@ resource "azurerm_linux_virtual_machine" "openclaw" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "ubuntu-24_04-lts"
+    offer     = "ubuntu-26_04-lts" // or "ubuntu-24_04-lts"
     sku       = "server"
     version   = "latest"
   }
