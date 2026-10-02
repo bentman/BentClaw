@@ -1,0 +1,71 @@
+# BentClaw in Docker, patterned on OpenClaw's own docker-compose.yml:
+#   openclaw-gateway  the official image, official command, unmodified.
+#   bentclaw          the "openclaw-cli" companion: same image + the cloud-init
+#                     toolset + sshd, sharing the gateway's network and state.
+# Settings come from docker/.env (see .env.example). Host ports bind to
+# 127.0.0.1 and default to 2222 / 18790 so a host-side openclaw (22 / 18789)
+# is left alone.
+name: bentclaw
+
+x-state: &state
+  - state:/home/node/.openclaw
+  - secrets:/home/node/.config/openclaw
+
+services:
+  openclaw-gateway:
+    image: ${OPENCLAW_IMAGE:-ghcr.io/openclaw/openclaw:latest}
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_GATEWAY_PORT: "18789"
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+      TZ: ${OPENCLAW_TZ:-UTC}
+    volumes: *state
+    cap_drop: [NET_RAW, NET_ADMIN]
+    security_opt: ["no-new-privileges:true"]
+    ports:
+      - "127.0.0.1:${OPENCLAW_GATEWAY_PORT:-18790}:18789"  # Control UI / gateway
+      - "127.0.0.1:${SSH_PORT:-2222}:22"                   # ssh (served by bentclaw)
+    init: true
+    restart: unless-stopped
+    cpus: 2
+    mem_limit: 6g
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
+    healthcheck:
+      test: ["CMD", "node", "dist/docker-healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  bentclaw:
+    build:
+      context: .
+      args:
+        OPENCLAW_IMAGE: ${OPENCLAW_IMAGE:-ghcr.io/openclaw/openclaw:latest}
+        REPO_URL: ${REPO_URL:-https://github.com/bentman/BentClaw.git}
+    image: ${BENTCLAW_IMAGE:-ghcr.io/bentclaw/bentclaw:latest}
+    network_mode: "service:openclaw-gateway"
+    depends_on: [openclaw-gateway]
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+      SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY:-}
+      SSH_PASSWORD: ${SSH_PASSWORD:-}
+    volumes:
+      - home:/home/node                       # CLI logins, repo checkout
+      - state:/home/node/.openclaw            # shared with the gateway
+      - secrets:/home/node/.config/openclaw
+      - hostkeys:/etc/ssh/hostkeys            # stable ssh host key
+    cap_drop: [NET_RAW, NET_ADMIN]
+    init: true
+    restart: unless-stopped
+    cpus: 2
+    mem_limit: 2g
+
+volumes:
+  state:
+  secrets:
+  home:
+  hostkeys:

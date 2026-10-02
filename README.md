@@ -85,6 +85,13 @@ Only the VM is reachable over the tunnel — not the whole subnet. Note: the Ope
 
 Or set `allow_gateway_public = true` in `terraform.tfvars` to allow the gateway port from your IP directly (re-apply required).
 
+## 🐧 Other targets
+
+Same toolset without Azure:
+
+- [`linux/`](linux/README.md) — a Debian/Ubuntu machine or WSL distro, via one script
+- [`docker/`](docker/README.md) — containers, patterned on OpenClaw's own Docker setup
+
 ## 🧹 Cleanup
 
 ```bash
