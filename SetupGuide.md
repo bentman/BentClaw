@@ -1,4 +1,4 @@
-# BentClaw Setup Guide
+# 🦀 BentClaw Setup Guide
 
 Post-deploy steps for the Azure VM. Replace `<placeholders>` with your values.
 For the Docker variant see [docker/README.md](docker/README.md).
