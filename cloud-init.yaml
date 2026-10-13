@@ -116,7 +116,7 @@ runcmd:
   - runuser -l ${admin_username} -c 'curl -fsSL https://claude.ai/install.sh | bash -s stable'
   # Codex
   - runuser -l ${admin_username} -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
-  # Antigravity
+  # Antigravity 
   - runuser -l ${admin_username} -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash'
   # Github Copilot
   - runuser -l ${admin_username} -c 'curl -fsSL https://gh.io/copilot-install | bash'
