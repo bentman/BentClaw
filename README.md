@@ -1,11 +1,12 @@
-# 🦀 BentClaw — AI Agent Dev-Lab on Azure (Terraform)
+# 🏛️ BentHermes — AI Agent Dev-Lab on Azure using Terraform
+## ... The project previously known as ~~🦀~~ ~~BentClaw~~
 
 Deploys [Hermes Agent](https://hermes-agent.nousresearch.com/) on a single Azure Linux VM.
 > No Bastion, no Key Vault — just a locked-down VM with a public IP and NSG-restricted SSH.
 
-### Why Hermes?
+### 🏛️ Why Hermes?
 
-OpenClaw was the original lab target, but it presented significant pitfalls — fragile config schemas across updates, opaque gateway auth, and a talent for creative self-destruction during overnight autonomous runs. After one too many mornings greeted by a broken gateway and a $200 token bill from a recursive lint-fix loop, the lab switched to [Hermes Agent](https://hermes-agent.nousresearch.com/) by Nous Research.
+OpenClaw was the original lab target, but it presented significant pitfalls — fragile config schemas across updates, opaque gateway auth, and a talent for creative self-destruction during overnight autonomous runs. After one too many mornings greeted by a broken gateway and a $100 token bill from a recursive lint-fix loop, the lab switched to [Hermes Agent](https://hermes-agent.nousresearch.com/) by Nous Research.
 
 Hermes brings a few things OpenClaw never quite nailed:
 
@@ -109,7 +110,7 @@ ssh -i ~/.ssh/azureclaw_key.pem \
 
 Set `allow_hermes_gateway_public = true` or `allow_hermes_webui_public = true` in `terraform.tfvars` to allow those ports from your IP directly (re-apply required).
 
-## 🐧 Other targets
+## 🐧 Other targets (still OpenClaw based)
 
 Same toolset without Azure:
 
@@ -143,6 +144,6 @@ terraform destroy
 
 - `Standard_B2s` is the sweet spot for a single-user dev-lab, bursty workload (~$30/mo).
 - Heavier use (multiple channels, big automations):
-  - bump to `Standard_D2s_v5` (2 vCPU / 8 GB, ~$55/mo).
+  - bump to `Standard_D2s_v5` (2 vCPU / 8 GB, ~$65/mo).
 - cloud-init runs `apt update && apt upgrade -y`, installs packages, then installs Hermes; first boot takes ~10 minutes before everything is up.
 - OPTIONAL: Uncomment `# OpenClaw` install in `cloud-init.yaml` to also install [OpenClaw](https://openclaw.ai)
