@@ -82,10 +82,22 @@ variable "subnet_prefix" {
   default     = "10.0.2.0/24"
 }
 
-variable "gateway_port" {
+variable "openclaw_gateway_port" {
   description = "OpenClaw gateway (WebSocket/dashboard) port"
   type        = number
   default     = 18789
+}
+
+variable "hermes_gateway_port" {
+  description = "Hermes gateway port"
+  type        = number
+  default     = 8642
+}
+
+variable "hermes_webui_port" {
+  description = "Hermes WebSocket/dashboard port"
+  type        = number
+  default     = 9119
 }
 
 variable "openvpn_port" {
@@ -95,8 +107,20 @@ variable "openvpn_port" {
 }
 
 # caution: exposing the gateway to the internet bypasses SSH-tunnel access
-variable "allow_gateway_public" {
-  description = "Open the gateway port to the deployer's IP (instead of tunneling over SSH)"
+variable "allow_openclaw_gateway_public" {
+  description = "Open the openclaw gateway port to the deployer's IP (instead of tunneling over SSH)"
+  type        = bool
+  default     = false
+}
+
+variable "allow_hermes_gateway_public" {
+  description = "Open the hermes gateway port to the deployer's IP (instead of tunneling over SSH)"
+  type        = bool
+  default     = false
+}
+
+variable "allow_hermes_webui_public" {
+  description = "Open the hermes gateway port to the deployer's IP (instead of tunneling over SSH)"
   type        = bool
   default     = false
 }

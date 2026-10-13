@@ -100,7 +100,7 @@ write_files:
 runcmd:
   # apt update
   - apt update
-  # Node.js 26 - OpenClaw recommended runtime
+  # Node.js 26 - required by OpenClaw (Hermes bundles its own runtimes)
   - curl -fsSL https://deb.nodesource.com/setup_26.x | bash -
   - apt install -y nodejs
   - node --version  
@@ -121,9 +121,9 @@ runcmd:
   # Github Copilot
   - runuser -l ${admin_username} -c 'curl -fsSL https://gh.io/copilot-install | bash'
   # OpenClaw
-  - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
-  # Hermes
-  # - runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive'
+  # - runuser -l ${admin_username} -c 'curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard'
+  # Hermes (headless: skip computer-use GUI driver)
+  - runuser -l ${admin_username} -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --skip-computer-use'
   # ensure user-local CLI path
   - runuser -l ${admin_username} -c 'grep -qxF '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' ~/.bashrc || echo '\''export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"'\'' >> ~/.bashrc'
   # git clone repo local

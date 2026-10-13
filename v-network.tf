@@ -52,15 +52,41 @@ resource "azurerm_network_security_group" "nsg_openclaw" {
     destination_address_prefix = "*"
   }
 
-  # OpenClaw gateway - only when allow_gateway_public = true
+  # OpenClaw gateway - only when allow_openclaw_gateway_public = true
   security_rule {
-    name                       = "allow-gateway-from-myip"
+    name                       = "allow-openclaw-gateway-from-myip"
     priority                   = 110
     direction                  = "Inbound"
-    access                     = var.allow_gateway_public ? "Allow" : "Deny"
+    access                     = var.allow_openclaw_gateway_public ? "Allow" : "Deny"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = tostring(var.gateway_port)
+    destination_port_range     = tostring(var.openclaw_gateway_port)
+    source_address_prefix      = local.my_ip
+    destination_address_prefix = "*"
+  }
+
+  # Hermes gateway - only when allow_hermes_gateway_public = true
+  security_rule {
+    name                       = "allow-hermes-gateway-from-myip"
+    priority                   = 130
+    direction                  = "Inbound"
+    access                     = var.allow_hermes_gateway_public ? "Allow" : "Deny"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = tostring(var.hermes_gateway_port)
+    source_address_prefix      = local.my_ip
+    destination_address_prefix = "*"
+  }
+
+  # Hermes WebUI - only when allow_hermes_webui_public = true
+  security_rule {
+    name                       = "allow-hermes-webui-from-myip"
+    priority                   = 140
+    direction                  = "Inbound"
+    access                     = var.allow_hermes_webui_public ? "Allow" : "Deny"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = tostring(var.hermes_webui_port)
     source_address_prefix      = local.my_ip
     destination_address_prefix = "*"
   }

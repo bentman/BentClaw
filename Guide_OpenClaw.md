@@ -1,4 +1,4 @@
-# 🦀 BentClaw Setup Guide
+# 🦀 OpenClaw Setup Guide
 
 Post-deploy steps for the Azure VM. Replace `<placeholders>` with your values.
 For the Docker variant see [docker/README.md](docker/README.md).
@@ -109,10 +109,6 @@ Use `<emoji>` for emoji and `/home/<user>/<avatar>.png` for avatar.
 Vibe: `<one-line personality>`.
 ```
 
-## Hermes (optional)
+## Hermes
 
-Uncomment the `# Hermes` line in `cloud-init.yaml` before deploying, or run it by hand:
-
-```bash
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive
-```
+Hermes is now the primary agent. See [Guide_Hermes.md](Guide_Hermes.md).

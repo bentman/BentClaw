@@ -38,9 +38,19 @@ output "openvpn_port" {
   value       = var.openvpn_port
 }
 
-output "gateway_port" {
+output "openclaw_gateway_port" {
   description = "OpenClaw gateway (WebSocket/dashboard) port"
-  value       = var.gateway_port
+  value       = var.openclaw_gateway_port
+}
+
+output "hermes_gateway_port" {
+  description = "Hermes Agent gateway (API) port"
+  value       = var.hermes_gateway_port
+}
+
+output "hermes_webui_port" {
+  description = "Hermes Agent WebUI (dashboard) port"
+  value       = var.hermes_webui_port
 }
 
 output "openvpn_config_file" {
@@ -56,10 +66,16 @@ output "next_steps" {
   value       = <<-EOT
     1. terraform output -raw ssh_private_key > ~/.ssh/${var.project_name}.pem
     2. ssh -i ~/.ssh/${var.project_name}.pem ${var.vm_localadmin_user}@${azurerm_public_ip.vm_pip.fqdn}
-    3. Wait ~10 min for cloud-init (apt upgrade + openclaw install), then: tail /var/log/cloud-init-output.log
-    4. Verify: openclaw --version && openclaw doctor
-    5. When ready, run onboarding + install the gateway service: openclaw onboard --install-daemon
+    3. Wait ~10 min for cloud-init (apt upgrade + hermes install), then: tail /var/log/cloud-init-output.log
+    4. Verify: hermes --version && hermes doctor
+    5. When ready, install the gateway service: hermes gateway install
     6. terraform output -raw openvpn_config_file   # scp azureclaw.ovpn from the VM
-    7. Import azureclaw.ovpn into your OpenVPN client; gateway at http://${local.vm_private_ip}:${var.gateway_port}
+    7. Import azureclaw.ovpn into your OpenVPN client
+    8. Hermes gateway at http://${local.vm_private_ip}:${var.hermes_gateway_port}
+    9. Hermes WebUI  at http://${local.vm_private_ip}:${var.hermes_webui_port}
+    # Optional: uncomment OpenClaw in cloud-init.yaml, replace VM, then:
+    # openclaw --version && openclaw doctor
+    # openclaw onboard --install-daemon
+    # OpenClaw gateway at http://${local.vm_private_ip}:${var.openclaw_gateway_port}
   EOT
 }
