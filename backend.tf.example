@@ -1,4 +1,4 @@
-# example_backend.tf
+# backend.tf.example
 # This file provides an example configuration for the Terraform backend using Azure.
 # It defines the Azure Resource Group, Storage Account, and Container to store the Terraform state file.
 # This helps manage and share state between team members securely.

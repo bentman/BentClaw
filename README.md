@@ -1,5 +1,5 @@
-# 🏛️ BentHermes — AI Agent Dev-Lab on Azure using Terraform
-## ... The project previously known as ~~🦀~~ ~~BentClaw~~
+# 🏛️ BentHermes — AI Agent Dev-Lab on Azure using Terraform  
+## ... The project previously known as ~~🦀~~ ~~BentClaw~~  
 
 Deploys [Hermes Agent](https://hermes-agent.nousresearch.com/) on a single Azure Linux VM.
 > No Bastion, no Key Vault — just a locked-down VM with a public IP and NSG-restricted SSH.
