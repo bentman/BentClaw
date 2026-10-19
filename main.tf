@@ -58,6 +58,11 @@ resource "azurerm_linux_virtual_machine" "openclaw" {
   secure_boot_enabled = true
   vtpm_enabled        = true
 
+  # Passwordless access to the private Hermes backup container
+  identity {
+    type = "SystemAssigned"
+  }
+
   admin_ssh_key {
     username   = var.vm_localadmin_user
     public_key = tls_private_key.openclaw_ssh.public_key_openssh

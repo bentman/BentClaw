@@ -24,6 +24,49 @@ users:
   - default
 
 write_files:
+  # Pinned official Terraform/TFLint binaries, verified before installation
+  - path: /opt/install-terraform-tools.py
+    permissions: "0755"
+    content: |
+      #!/usr/bin/env python3
+      import hashlib
+      import io
+      import os
+      import platform
+      import subprocess
+      import urllib.request
+      import zipfile
+      from pathlib import Path
+
+      if platform.machine() != "x86_64":
+          raise SystemExit("Terraform tool bootstrap requires Linux AMD64")
+
+      tools = {
+          "terraform": (
+              "https://releases.hashicorp.com/terraform/1.16.6/terraform_1.16.6_linux_amd64.zip",
+              "38034b38d03096399a7a1264a14561a8029b2b496fd1f169452656e53968f1b7",
+          ),
+          "tflint": (
+              "https://github.com/terraform-linters/tflint/releases/download/v0.64.0/tflint_linux_amd64.zip",
+              "cca9d13e2e1d7a2c627af60ff899a3c9b74212899416aeb96ec764d2ef954537",
+          ),
+      }
+      for name, (url, checksum) in tools.items():
+          with urllib.request.urlopen(url, timeout=120) as response:
+              payload = response.read()
+          if hashlib.sha256(payload).hexdigest() != checksum:
+              raise SystemExit("Checksum mismatch: " + name)
+          destination = Path("/usr/local/bin") / name
+          staged = destination.with_suffix(".new")
+          try:
+              with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+                  staged.write_bytes(archive.read(name))
+              staged.chmod(0o755)
+              os.replace(staged, destination)
+          finally:
+              staged.unlink(missing_ok=True)
+          subprocess.run([str(destination), "--version"], check=True)
+
   # OpenVPN bootstrap script (values rendered in by Terraform)
   - path: /opt/openvpn-setup.sh
     permissions: "0700"
@@ -98,6 +141,8 @@ write_files:
       systemctl enable --now openvpn-server@server
 
 runcmd:
+  # Terraform tooling for infrastructure maintenance (no infrastructure apply)
+  - python3 /opt/install-terraform-tools.py
   # apt update
   - apt update
   # Node.js 26 - required by OpenClaw (Hermes bundles its own runtimes)

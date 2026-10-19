@@ -16,6 +16,7 @@ resource "azurerm_subnet" "snet_openclaw" {
   resource_group_name  = local.rg_name
   virtual_network_name = azurerm_virtual_network.vnet_openclaw.name
   address_prefixes     = [var.subnet_prefix]
+  service_endpoints    = ["Microsoft.Storage"]
 }
 
 ##### SECURITY

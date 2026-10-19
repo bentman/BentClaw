@@ -59,6 +59,22 @@ output "openvpn_config_file" {
   sensitive   = true
 }
 
+##### storage.tf outputs
+output "hermes_backup_storage_account_name" {
+  description = "Storage account for off-VM Hermes backups"
+  value       = azurerm_storage_account.hermes_backup.name
+}
+
+output "hermes_backup_container_name" {
+  description = "Private container for verified Hermes backup archives"
+  value       = azurerm_storage_container.hermes_backup.name
+}
+
+output "hermes_backup_container_url" {
+  description = "Backup container URL (requires subnet access and Azure authentication)"
+  value       = "${azurerm_storage_account.hermes_backup.primary_blob_endpoint}${azurerm_storage_container.hermes_backup.name}"
+}
+
 ##### install / verify next steps
 output "next_steps" {
   description = "Post-deploy steps"
