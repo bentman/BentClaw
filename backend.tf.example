@@ -12,7 +12,7 @@
 #     resource_group_name   = "<your-resource-group>"
 #     storage_account_name  = "<your-storage-account>"
 #     container_name        = "<your-container-name>"
-#     key                   = "example.tfstate"
+#     key                   = "${var.project_name}.tfstate"
 #     access_key            = "<storage-account-access-key>"
 #     # Optional: use the storage account access key for local/dev auth.
 #     # Do NOT commit this value to source control.
