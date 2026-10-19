@@ -41,10 +41,19 @@ resource "azurerm_storage_container" "hermes_backup" {
   container_access_type = "private"
 }
 
+# AzureRM can retain a null principal_id while enabling an existing VM's identity.
+# Defer this lookup until the VM update has completed instead of using that null.
+data "azurerm_virtual_machine" "hermes_backup_identity" {
+  name                = azurerm_linux_virtual_machine.openclaw.name
+  resource_group_name = azurerm_linux_virtual_machine.openclaw.resource_group_name
+
+  depends_on = [azurerm_linux_virtual_machine.openclaw]
+}
+
 # The upload job uses the VM identity, not storage keys or a SAS token.
 resource "azurerm_role_assignment" "hermes_backup" {
   scope                = azurerm_storage_container.hermes_backup.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_linux_virtual_machine.openclaw.identity[0].principal_id
+  principal_id         = data.azurerm_virtual_machine.hermes_backup_identity.identity[0].principal_id
   principal_type       = "ServicePrincipal"
 }
