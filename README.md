@@ -17,8 +17,13 @@ This lab began life as BentClaw, built around OpenClaw. OpenClaw proved to be an
 - NSG: SSH only from your auto-detected public IP; OpenVPN (UDP 1194) open
 - OpenVPN server running on the VM (connection profile stored in `~/azureclaw.ovpn`)
 - Hermes Agent, azure-cli, ffmpeg, git, Terraform and TFLint installed by cloud-init on first boot
-- Also installed on the host-vm, are the agentic-coding "4 Horsemen" ()
-- A private Blob container for off-VM Hermes backups (`storage.tf`)
+- Also installed on the host-vm, are the agentic-coding "4 Horsemen"
+  - Google Antigravity CLI (agy)
+  - Anthropic CLI (claude-code)
+  - OpenAI CLI (codex)
+  - Github CLI (copilot)
+- A private Blob container for off-VM Hermes backups (`storage.tf`) is installed by default
+  - If you don't want/need it, rename it `mv storage.tf storage.tf.example`
 
 > Cost: about $35/month. Deallocating the VM (or `terraform destroy`) stops compute billing.
 
