@@ -9,7 +9,7 @@ This lab began life as BentClaw, built around OpenClaw. OpenClaw proved to be an
 
 [Hermes Agent](https://hermes-agent.nousresearch.com/) (Nous Research) replaced it. It keeps persistent memory, loads reusable skills on demand, and writes new ones itself. Set a budget alarm anyway.
 
-> The OpenClaw material is kept (not unmaintained) in [`OpenClaw/`](OpenClaw/) (guide, Linux script, Docker).
+> The OpenClaw material is kept (but *not* maintained) in [`OpenClaw/`](OpenClaw/) (guide, Linux script, Docker).
 
 ## What you get from Terraform in this repo...
 
