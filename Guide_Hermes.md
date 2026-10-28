@@ -48,6 +48,7 @@ pushd WORK/CODE/REPO
 az login --use-device-code
 claude auth login
 codex login --device-auth
+copilot login --device-code
 agy
 popd
 ```
