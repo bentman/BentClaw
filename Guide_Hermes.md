@@ -6,8 +6,8 @@ For the Docker variant see [docker/README.md](docker/README.md).
 ## 1. Rebuild the VM (optional)
 
 ```bash
-terraform plan  -replace='azurerm_linux_virtual_machine.openclaw'
-terraform apply -replace='azurerm_linux_virtual_machine.openclaw'
+terraform plan -replace='azurerm_linux_virtual_machine.openclaw' -replace='azurerm_storage_account.hermes_backup'
+terraform apply -replace='azurerm_linux_virtual_machine.openclaw' -replace='azurerm_storage_account.hermes_backup'
 terraform output next_steps
 ```
 
