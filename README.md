@@ -1,7 +1,7 @@
 # 🏛️ BentHermes — Hermes Agent Dev-Lab
 ## Built in Azure with Terraform
 
-Deploys [Hermes Agent](https://hermes-agent.nousresearch.com/) on a single Azure Linux VM: public IP, SSH locked to your IP, OpenVPN for everything else. No Bastion, no Key Vault.
+Deploys [Hermes Agent](https://hermes-agent.nousresearch.com/) on a single Azure Linux VM: public IP, SSH locked to your router's external IP, OpenVPN for everything else. No Bastion, no Key Vault.
 
 ## Why Hermes?
 
