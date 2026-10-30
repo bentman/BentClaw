@@ -23,7 +23,7 @@ This lab began life as BentClaw, built around OpenClaw. OpenClaw proved to be an
   - OpenAI CLI (codex)
   - Github CLI (copilot)
 - A private Blob container for off-VM Hermes backups (`storage.tf`) is installed by default
-  - If you don't want/need it, rename it `mv storage.tf storage.tf.example`
+  - If you don't want/need it, don't use it (costs are pennis/mo)
 
 > Cost: about $35/month. Deallocating the VM (or `terraform destroy`) stops compute billing.
 
@@ -44,7 +44,7 @@ cp terraform.tfvars.example terraform.tfvars   # fill in the arm_* values
 cp backend.tf.example backend.tf               # only if using a remote state backend
 ```
 
-> Both files are gitignored. Keep it that way.
+Both files are gitignored. Keep it that way.
 
 ## 3. Check, plan, deploy
 
@@ -56,7 +56,7 @@ terraform plan
 terraform apply          # only after reading the plan
 ```
 
-> Careful: Changes to cloud-init (`user_data`), vm-size, os-image, vm-nic, etc. could replace the VM. Read the plan.
+Careful: Changes to cloud-init (`user_data`), vm-size, os-image, vm-nic, etc. could replace the VM. Read the plan.
 
 ## 4. Connect
 
@@ -66,8 +66,8 @@ chmod 600 ~/.ssh/azureclaw_key.pem
 ssh -i ~/.ssh/azureclaw_key.pem <vm_localadmin_user>@$(terraform output -raw vm_public_name)
 ```
 
-> On Windows, restrict the key's ACL or OpenSSH refuses it:  
-> `icacls <file> /inheritance:r /grant:r "<DOMAIN>\<user>:R"`
+On Windows, restrict the key's ACL or OpenSSH refuses it:  
+`icacls <file> /inheritance:r /grant:r "<DOMAIN>\<user>:R"`
 
 ## 5. Finish Hermes setup
 
