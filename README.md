@@ -23,7 +23,7 @@ This lab began life as BentClaw, built around OpenClaw. OpenClaw proved to be an
   - OpenAI CLI (codex)
   - Github CLI (copilot)
 - A private Blob container for off-VM Hermes backups (`storage.tf`) is installed by default
-  - If you don't want/need it, don't use it (costs are pennis/mo)
+  - If you don't want/need it, don't use it (costs are pennies/mo)
 
 > Cost: about $35/month. Deallocating the VM (or `terraform destroy`) stops compute billing.
 
