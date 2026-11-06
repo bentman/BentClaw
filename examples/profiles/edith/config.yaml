@@ -1,0 +1,56 @@
+# E.D.I.T.H. - example profile config (portable, secret-free).
+# Model ids are the ones in use on the source host; availability depends on your accounts.
+model:
+  default: "gpt-6.1-sol"
+  provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
+  api_mode: codex_responses
+auth:
+  adopt_external_logins: false   # does NOT isolate the DirectSDK `claude` subprocess; see README
+terminal:
+  cwd: .
+platform_toolsets:
+  cli:
+    - clarify
+    - code_execution
+    - file
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - web
+tts:
+  provider: elevenlabs           # needs ELEVENLABS_API_KEY only if speech is used
+  elevenlabs:
+    voice_id: FGY2WhTYpPnrIDTdsKH5
+    model_id: eleven_multilingual_v2
+plugins:
+  enabled:
+    - claude-subscription-directsdk-experimental
+  disabled: []
+  # Optional per-profile Claude login directory (see README "Isolating the Claude login").
+  # entries:
+  #   claude-subscription-directsdk-experimental:
+  #     settings:
+  #       claude_config_dir: "<ABSOLUTE_PATH_TO_CLAUDE_CONFIG_DIR>"
+mcp_servers:
+  context7:
+    url: https://mcp.context7.com/mcp
+    enabled: true
+    # Optional opt-in (higher limits): CONTEXT7_API_KEY in .env does nothing by itself.
+    # Uncomment to send it; Hermes expands ${VAR} from .env at load time.
+    # headers:
+    #   Authorization: "Bearer ${CONTEXT7_API_KEY}"
+  microsoft-learn:
+    url: https://learn.microsoft.com/api/mcp
+    enabled: true
+agent:
+  reasoning_effort: high
+# Fallbacks used on the source host; left off so a fresh profile never tries unauthenticated providers.
+# fallback_providers:
+#   - provider: claude-subscription-directsdk-experimental
+#     model: "claude-sonnet-5-5[1m]"
+#   - provider: gemini
+#     model: "gemini-3.8-flash"

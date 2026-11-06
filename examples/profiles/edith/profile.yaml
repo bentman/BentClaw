@@ -1,0 +1,7 @@
+# Profile metadata: description feeds the Kanban decomposer; ui_meta feeds Desktop Bot Mode.
+description: 'E.D.I.T.H.: independent verification, quality control and specific correction requests. Inspect original criteria, actual artifacts and test evidence; never substitute reassurance for checks.'
+description_auto: false
+ui_meta:
+  hermes-bots:
+    title: 🛡️ E.D.I.T.H.
+    hidden: false

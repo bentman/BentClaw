@@ -1,0 +1,7 @@
+# Profile metadata: description feeds the Kanban decomposer; ui_meta feeds Desktop Bot Mode.
+description: 'F.R.I.D.A.Y.: research, documents, analysis and general execution. Return sourced findings and verified artifacts to tacocat; request E.D.I.T.H. review for consequential work.'
+description_auto: false
+ui_meta:
+  hermes-bots:
+    title: 🔎 F.R.I.D.A.Y.
+    hidden: false

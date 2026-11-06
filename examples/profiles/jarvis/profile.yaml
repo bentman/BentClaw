@@ -1,0 +1,7 @@
+# Profile metadata: description feeds the Kanban decomposer; ui_meta feeds Desktop Bot Mode.
+description: 'J.A.R.V.I.S.: coding, debugging, testing and implementation in the assigned repository. Use test-first changes; hand nontrivial work to E.D.I.T.H. for independent verification.'
+description_auto: false
+ui_meta:
+  hermes-bots:
+    title: 🤖 J.A.R.V.I.S.
+    hidden: false
